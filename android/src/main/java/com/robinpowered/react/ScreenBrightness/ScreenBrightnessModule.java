@@ -40,10 +40,18 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setBrightness(float brightness, Promise promise) {
-        WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
-        lp.screenBrightness = brightness;
-        mActivity.getWindow().setAttributes(lp);
-        promise.resolve(brightness);
+    public void setBrightness(final float brightness, final Promise promise) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
+                lp.screenBrightness=brightness;
+                mActivity.getWindow().
+
+                        setAttributes(lp);
+
+                promise.resolve(brightness);
+            }
+        });
     }
 }
