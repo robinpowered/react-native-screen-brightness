@@ -46,10 +46,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
             public void run() {
                 WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
                 lp.screenBrightness=brightness;
-                mActivity.getWindow().
-
-                        setAttributes(lp);
-
+                mActivity.getWindow().setAttributes(lp);
                 promise.resolve(brightness);
             }
         });
