@@ -20,7 +20,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
     public static final int REQUEST_WRITE_SETTINGS_PERMISSION = 2525;
     private static final String PERMISSION_EVENT_NAME = "screenBrightnessPermission";
-    private static final int BRIGHTNESS_RANGE = 255;
+    private static final int BRIGHTNESS_MAX = 255;
+    private static final int BRIGHTNESS_MIN = 0;
 
     private Activity mActivity;
 
@@ -101,11 +102,8 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      */
     private boolean setSystemBrightness(int brightness) {
         if (hasSettingsPermission()) {
-            if (brightness < 0) {
-                brightness = 0;
-            } else if (brightness > BRIGHTNESS_RANGE) {
-                brightness = BRIGHTNESS_RANGE;
-            }
+            // ensure brightness is bound between range 0-255
+            brightness = Math.max(BRIGHTNESS_MIN, Math.min(brightness, BRIGHTNESS_MAX));
             Settings.System.putInt(
                     getReactApplicationContext().getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS,
@@ -145,7 +143,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setBrightness(float brightness, final Promise promise) {
-        if (setSystemBrightness((int) brightness * BRIGHTNESS_RANGE)) {
+        if (setSystemBrightness((int) brightness * BRIGHTNESS_MAX)) {
             promise.resolve(brightness);
         } else {
             promise.reject(null);
