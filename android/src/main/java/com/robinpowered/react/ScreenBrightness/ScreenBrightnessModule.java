@@ -150,7 +150,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setBrightness(float brightness, final Promise promise) {
-        if (setSystemBrightness((int) brightness * BRIGHTNESS_MAX)) {
+        if (setSystemBrightness((int) (brightness * BRIGHTNESS_MAX))) {
             promise.resolve(brightness);
         } else {
             promise.reject(null);
