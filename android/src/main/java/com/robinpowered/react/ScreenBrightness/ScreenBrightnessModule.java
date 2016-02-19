@@ -18,21 +18,28 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 
 public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
-    public static final int REQUEST_WRITE_SETTINGS_PERMISSION = 2525;
+    public static final String MODULE_NAME = "ScreenBrightness";
+
     private static final String PERMISSION_EVENT_NAME = "screenBrightnessPermission";
     private static final int BRIGHTNESS_MAX = 255;
     private static final int BRIGHTNESS_MIN = 0;
 
+    private final int mWriteSettingsRequestCode;
+
     private Activity mActivity;
 
-    public ScreenBrightnessModule(ReactApplicationContext reactApplicationContext, Activity activity) {
+    public ScreenBrightnessModule(
+            ReactApplicationContext reactApplicationContext,
+            Activity activity,
+            final int writeSettingsRequestCode) {
         super(reactApplicationContext);
         mActivity = activity;
+        mWriteSettingsRequestCode = writeSettingsRequestCode;
     }
 
     @Override
     public String getName() {
-        return "ScreenBrightness";
+        return MODULE_NAME;
     }
 
     /**
@@ -72,7 +79,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
                     Settings.ACTION_MANAGE_WRITE_SETTINGS,
                     Uri.parse("package:" + context.getPackageName())
             );
-            mActivity.startActivityForResult(intent, REQUEST_WRITE_SETTINGS_PERMISSION);
+            mActivity.startActivityForResult(intent, mWriteSettingsRequestCode);
         }
     }
 
