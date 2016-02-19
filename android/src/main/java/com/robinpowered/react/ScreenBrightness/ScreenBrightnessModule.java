@@ -63,7 +63,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      *
      * @return True if WRITE_SETTINGS are granted.
      */
-    public boolean hasSettingsPermission() {
+    private boolean hasSettingsPermission() {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
                 (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 Settings.System.canWrite(getReactApplicationContext()));
