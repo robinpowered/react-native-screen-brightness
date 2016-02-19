@@ -16,27 +16,45 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-
+/**
+ * A module responsible for adjusting the brightness level of the display and the activity.
+ *
+ * Exposes an API to the JavaScript context to request permission to `WRITE_SETTINGS` and
+ * set specific brightness levels.
+ */
 public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
+    /**
+     * The name of the module for the JS context to reference.
+     */
     public static final String MODULE_NAME = "ScreenBrightness";
 
     private static final String PERMISSION_EVENT_NAME = "screenBrightnessPermission";
     private static final int BRIGHTNESS_MAX = 255;
     private static final int BRIGHTNESS_MIN = 0;
+    private final int writeSettingsRequestCode;
+    private Activity activity;
 
-    private final int mWriteSettingsRequestCode;
-
-    private Activity mActivity;
-
+    /**
+     * Constructor
+     *
+     * @param reactApplicationContext The application context provided by the ReactPackage.
+     * @param activity The activity provided by the ReactPackage.
+     * @param writeSettingsRequestCode The request code for initiating the permission intent.
+     */
     public ScreenBrightnessModule(
             ReactApplicationContext reactApplicationContext,
             Activity activity,
             final int writeSettingsRequestCode) {
         super(reactApplicationContext);
-        mActivity = activity;
-        mWriteSettingsRequestCode = writeSettingsRequestCode;
+        this.activity = activity;
+        this.writeSettingsRequestCode = writeSettingsRequestCode;
     }
 
+    /**
+     * Gets the name of the module for the JS context to reference.
+     *
+     * @return The module name.
+     */
     @Override
     public String getName() {
         return MODULE_NAME;
@@ -79,7 +97,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
                     Settings.ACTION_MANAGE_WRITE_SETTINGS,
                     Uri.parse("package:" + context.getPackageName())
             );
-            mActivity.startActivityForResult(intent, mWriteSettingsRequestCode);
+            activity.startActivityForResult(intent, writeSettingsRequestCode);
         }
     }
 
@@ -125,7 +143,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      * Determines if the application has been granted WRITE_SETTINGS permissions.
      * This method is callable from the JS context.
      *
-     * @param promise A promise resolving if the application has WRITE_SETTINGS granted
+     * @param promise A promise resolving if the application has WRITE_SETTINGS granted.
      */
     @ReactMethod
     public void hasPermission(final Promise promise) {
@@ -149,7 +167,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      * @param promise A promise resolving if the brightness was updated.
      */
     @ReactMethod
-    public void setBrightness(float brightness, final Promise promise) {
+    public void setSystemBrightness(float brightness, final Promise promise) {
         if (setSystemBrightness((int) (brightness * BRIGHTNESS_MAX))) {
             promise.resolve(brightness);
         } else {
@@ -164,19 +182,19 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      * @param promise A promise resolving the brightness level.
      */
     @ReactMethod
-    public void getBrightness(final Promise promise) {
+    public void getSystemBrightness(final Promise promise) {
         promise.resolve(getSystemBrightness());
     }
 
     /**
-     * Gets the application brightness level
+     * Gets the application brightness level.
      * This method is callable from the JS context.
      *
      * @param promise A promise resolving the app brightness level.
      */
     @ReactMethod
     public void getAppBrightness(Promise promise) {
-        float brightness = mActivity.getWindow().getAttributes().screenBrightness;
+        float brightness = activity.getWindow().getAttributes().screenBrightness;
         promise.resolve(brightness);
     }
 
@@ -189,14 +207,39 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setAppBrightness(final float brightness, final Promise promise) {
-        mActivity.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
-                lp.screenBrightness=brightness;
-                mActivity.getWindow().setAttributes(lp);
+                WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+                lp.screenBrightness = brightness;
+                activity.getWindow().setAttributes(lp);
                 promise.resolve(brightness);
             }
         });
+    }
+
+    /**
+     * Gets the brightness level of the device.
+     * This method is callable from the JS context.
+     *
+     * @deprecated Use {@link #getSystemBrightness()} instead.
+     * @param promise A promise resolving the brightness level.
+     */
+    @ReactMethod
+    public void getBrightness(final Promise promise) {
+        getSystemBrightness(promise);
+    }
+
+    /**
+     * Updates the device brightness.
+     * This method is callable from the JS context.
+     *
+     * @deprecated Use {@link #setSystemBrightness(int)} instead.
+     * @param brightness The brightness level between 0-1.
+     * @param promise A promise resolving if the brightness was updated.
+     */
+    @ReactMethod
+    public void setBrightness(float brightness, final Promise promise) {
+        setSystemBrightness(brightness, promise);
     }
 }
