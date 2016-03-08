@@ -12,7 +12,7 @@ Run:
 
 `npm install --save react-native-screen-brightness`
 
-### android/app/build.gradle
+### Modify android/app/build.gradle
 
 Add `compile project(":react-native-screen-brightness")` to the dependencies section:
 
@@ -25,7 +25,7 @@ dependencies {
  }
 ```
 
-### android/settings.gradle
+### Modify android/settings.gradle
 
 Add
 
@@ -36,7 +36,7 @@ project(':react-native-screen-brightness').projectDir = new File(settingsDir, '.
 
 After the `include ':app'` line.
 
-### android/app/src/main/java/com/magicmirror/MainActivity.java
+### Modify android/app/src/main/java/com/magicmirror/MainActivity.java
 
 Add the following after the other `import` lines at the top of the file:
 
@@ -59,7 +59,7 @@ public class MainActivity extends ReactActivity {
  }
 ```
 
-### Your JavaScript:
+### Add to your JavaScript:
 
 Before any use of the code:
 
