@@ -1,20 +1,21 @@
 package com.robinpowered.react.ScreenBrightness;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.WindowManager;
 
+import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 
 /**
  * A module responsible for adjusting the brightness level of the display and the activity.
@@ -22,7 +23,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
  * Exposes an API to the JavaScript context to request permission to `WRITE_SETTINGS` and
  * set specific brightness levels.
  */
-public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
+public class ScreenBrightnessModule extends ReactContextBaseJavaModule
+        implements ActivityEventListener {
     /**
      * The name of the module for the JS context to reference.
      */
@@ -32,22 +34,19 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
     private static final int BRIGHTNESS_MAX = 255;
     private static final int BRIGHTNESS_MIN = 0;
     private final int writeSettingsRequestCode;
-    private Activity activity;
 
     /**
      * Constructor
      *
      * @param reactApplicationContext The application context provided by the ReactPackage.
-     * @param activity The activity provided by the ReactPackage.
      * @param writeSettingsRequestCode The request code for initiating the permission intent.
      */
     public ScreenBrightnessModule(
             ReactApplicationContext reactApplicationContext,
-            Activity activity,
             final int writeSettingsRequestCode) {
         super(reactApplicationContext);
-        this.activity = activity;
         this.writeSettingsRequestCode = writeSettingsRequestCode;
+        reactApplicationContext.addActivityEventListener(this);
     }
 
     /**
@@ -58,6 +57,13 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return MODULE_NAME;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == writeSettingsRequestCode) {
+            onPermissionResult();
+        }
     }
 
     /**
@@ -84,20 +90,20 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
     private boolean hasSettingsPermission() {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
                 (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                Settings.System.canWrite(getReactApplicationContext()));
+                        Settings.System.canWrite(getReactApplicationContext()));
     }
 
     /**
      * Invokes the request permission activity to request access for WRITE_SETTINGS.
      */
     private void requestSettingsPermission() {
-        Context context = getReactApplicationContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(context)) {
+        ReactApplicationContext application = getReactApplicationContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(application)) {
             Intent intent = new Intent(
                     Settings.ACTION_MANAGE_WRITE_SETTINGS,
-                    Uri.parse("package:" + context.getPackageName())
+                    Uri.parse("package:" + application.getPackageName())
             );
-            activity.startActivityForResult(intent, writeSettingsRequestCode);
+            application.startActivityForResult(intent, writeSettingsRequestCode, null);
         }
     }
 
@@ -171,7 +177,7 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
         if (setSystemBrightness((int) (brightness * BRIGHTNESS_MAX))) {
             promise.resolve(brightness);
         } else {
-            promise.reject(null);
+            promise.reject(new Error("Unable to set system brightness"));
         }
     }
 
@@ -194,8 +200,13 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void getAppBrightness(Promise promise) {
-        float brightness = activity.getWindow().getAttributes().screenBrightness;
-        promise.resolve(brightness);
+        Activity activity = getCurrentActivity();
+        if (activity != null) {
+            float brightness = getCurrentActivity().getWindow().getAttributes().screenBrightness;
+            promise.resolve(brightness);
+        } else {
+            promise.reject(new Error("Unable to access the current window"));
+        }
     }
 
     /**
@@ -207,15 +218,20 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setAppBrightness(final float brightness, final Promise promise) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-                lp.screenBrightness = brightness;
-                activity.getWindow().setAttributes(lp);
-                promise.resolve(brightness);
-            }
-        });
+        final Activity activity = getCurrentActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+                    lp.screenBrightness = brightness;
+                    activity.getWindow().setAttributes(lp);
+                    promise.resolve(brightness);
+                }
+            });
+        } else {
+            promise.reject(new Error("Unable to access the current window"));
+        }
     }
 
     /**
