@@ -9,6 +9,6 @@
   "author": "Atticus White <contact@atticuswhite.com> (http://atticuswhite.com/)",
   "license": "MIT",
   "devDependencies": {
-    "react-native": "^0.15.0"
+    "react-native": "^0.27.0"
   }
 }
