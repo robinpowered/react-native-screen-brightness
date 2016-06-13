@@ -14,11 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class ScreenBrightnessPackage implements ReactPackage {
-  private Activity mActivity = null;
   private final int mWriteSettingsRequestCode;
 
-  public ScreenBrightnessPackage(Activity activity, final int writeSettingsRequestCode) {
-    mActivity = activity;
+  public ScreenBrightnessPackage(final int writeSettingsRequestCode) {
     mWriteSettingsRequestCode = writeSettingsRequestCode;
   }
 
@@ -27,7 +25,6 @@ public class ScreenBrightnessPackage implements ReactPackage {
     List<NativeModule> modules = new ArrayList<NativeModule>();
     modules.add(new ScreenBrightnessModule(
             reactApplicationContext,
-            mActivity,
             mWriteSettingsRequestCode
     ));
     return modules;
