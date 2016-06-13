@@ -1,10 +1,13 @@
 package com.robinpowered.react.ScreenBrightness;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.view.WindowManager;
 
 import com.facebook.react.bridge.ActivityEventListener;
@@ -87,9 +90,9 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule
      * @return True if WRITE_SETTINGS are granted.
      */
     private boolean hasSettingsPermission() {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                        Settings.System.canWrite(getReactApplicationContext()));
+        int responseCode = ContextCompat.checkSelfPermission(getReactApplicationContext(),
+                Manifest.permission.WRITE_SETTINGS);
+        return responseCode == PackageManager.PERMISSION_GRANTED;
     }
 
     /**
@@ -97,7 +100,8 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule
      */
     private void requestSettingsPermission() {
         ReactApplicationContext application = getReactApplicationContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(application)) {
+
+        if (!hasSettingsPermission()) {
             Intent intent = new Intent(
                     Settings.ACTION_MANAGE_WRITE_SETTINGS,
                     Uri.parse("package:" + application.getPackageName())
