@@ -11,7 +11,7 @@ var {SystemBrightness} = NativeModules;
 
 SystemBrightness.setBrightness(0.5) // between 0 and 1
 
-SystemBrightness.getBrightness(brightness => {
+SystemBrightness.getBrightness().then(brightness => {
   console.log('brightness', brightness);
 });
 ```
