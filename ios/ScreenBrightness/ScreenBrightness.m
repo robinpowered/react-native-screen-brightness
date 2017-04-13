@@ -7,9 +7,6 @@
 //
 
 #import "ScreenBrightness.h"
-#import "RCTBridgeModule.h"
-#import "RCTBridge.h"
-#import "RCTEventDispatcher.h"
 
 @implementation ScreenBrightness
 
