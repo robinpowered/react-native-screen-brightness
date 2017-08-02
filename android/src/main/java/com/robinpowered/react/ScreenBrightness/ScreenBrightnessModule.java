@@ -67,6 +67,9 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule
             onPermissionResult();
         }
     }
+    
+    @Override
+    public void onNewIntent(Intent intent) { }
 
     /**
      * Called by the main activity when the ACTION_MANAGE_WRITE_SETTINGS result is received.
