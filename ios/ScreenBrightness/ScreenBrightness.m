@@ -7,6 +7,12 @@
 //
 
 #import "ScreenBrightness.h"
+#if __has_include(<React/RCTBridgeModule.H>)
+#else
+#import "RCTBridgeModule.h"
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+#endif
 
 @implementation ScreenBrightness
 
@@ -14,7 +20,7 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(getBrightness:(RCTPromiseResolveBlock)resolve
                   getScreenBrightnessRejector:(RCTPromiseRejectBlock)reject) {
-    
+
     float brightness = [[UIScreen mainScreen] brightness];
     resolve(@(brightness));
 }
