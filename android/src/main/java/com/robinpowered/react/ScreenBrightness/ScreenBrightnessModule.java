@@ -61,11 +61,14 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule
         return MODULE_NAME;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
         if (requestCode == writeSettingsRequestCode) {
             onPermissionResult();
         }
+    }
+
+    public void onNewIntent(Intent intent) {
+
     }
 
     /**
@@ -90,8 +93,12 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule
      * @return True if WRITE_SETTINGS are granted.
      */
     private boolean hasSettingsPermission() {
-        boolean hasPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-        Settings.System.canWrite(getReactApplicationContext());
+        boolean hasPermission = true;
+
+        // Check for permisions if > Android 6
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          hasPermission = Settings.System.canWrite(getReactApplicationContext());
+        }
 
         return hasPermission;
     }
