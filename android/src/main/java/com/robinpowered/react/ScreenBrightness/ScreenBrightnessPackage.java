@@ -30,7 +30,6 @@ public class ScreenBrightnessPackage implements ReactPackage {
     return modules;
   }
 
-  @Override
   public List<Class<? extends JavaScriptModule>> createJSModules() {
     return Collections.emptyList();
   }

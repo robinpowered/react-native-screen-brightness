@@ -61,11 +61,14 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule
         return MODULE_NAME;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
         if (requestCode == writeSettingsRequestCode) {
             onPermissionResult();
         }
+    }
+
+    public void onNewIntent(Intent intent) {
+
     }
 
     /**
