@@ -90,9 +90,10 @@ public class ScreenBrightnessModule extends ReactContextBaseJavaModule
      * @return True if WRITE_SETTINGS are granted.
      */
     private boolean hasSettingsPermission() {
+        // By default, Android versions earlier than 6 have permission.
         boolean hasPermission = true;
 
-        // Check for permisions if > Android 6
+        // Check for permisions if >= Android 6
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
           hasPermission = Settings.System.canWrite(getReactApplicationContext());
         }
