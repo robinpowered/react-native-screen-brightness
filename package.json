@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Atticus White <contact@atticuswhite.com> (http://atticuswhite.com/)",
+  "author": "Atticus White <atticus@robinpowered.com>",
   "license": "MIT",
   "devDependencies": {
     "react-native": "^0.27.0"
