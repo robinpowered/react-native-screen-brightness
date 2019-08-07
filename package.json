@@ -1,7 +1,7 @@
 {
   "name": "react-native-screen-brightness",
   "version": "1.0.0",
-  "description": "",
+  "description": "Screen brightness module for iOS & Android on React Native",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
