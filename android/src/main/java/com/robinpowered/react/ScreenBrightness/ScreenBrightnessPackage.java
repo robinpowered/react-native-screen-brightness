@@ -14,10 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class ScreenBrightnessPackage implements ReactPackage {
-  private final int mWriteSettingsRequestCode;
+  private final int mWriteSettingsRequestCode = 1;
 
-  public ScreenBrightnessPackage(final int writeSettingsRequestCode) {
-    mWriteSettingsRequestCode = writeSettingsRequestCode;
+  public ScreenBrightnessPackage() {
   }
 
   @Override

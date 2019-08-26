@@ -1,14 +1,43 @@
 {
-  "name": "react-native-screen-brightness",
-  "version": "1.0.0",
-  "description": "Screen brightness module for iOS & Android on React Native",
+  "_from": "react-native-screen-brightness@latest",
+  "_id": "react-native-screen-brightness@1.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-hemqW2wE5fYPU4Pv/FzkwAUQhO2AVwDgAjQdLc8Vu2SFUOWaA4SEqdNSM0+JrPfu+zEpw43K07K182L7CPxDUQ==",
+  "_location": "/react-native-screen-brightness",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-screen-brightness@latest",
+    "name": "react-native-screen-brightness",
+    "escapedName": "react-native-screen-brightness",
+    "rawSpec": "latest",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-screen-brightness/-/react-native-screen-brightness-1.0.0.tgz",
+  "_shasum": "a01f4bf1a8ca918dafcd1db15eab13966568cfa2",
+  "_spec": "react-native-screen-brightness@latest",
+  "_where": "/Users/Gasp/Development/apiZoom",
+  "author": {
+    "name": "Atticus White",
+    "email": "atticus@robinpowered.com"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Access and update the system brightness on a device.",
+  "devDependencies": {
+    "react-native": "^0.27.0"
+  },
+  "license": "MIT",
   "main": "index.js",
+  "name": "react-native-screen-brightness",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Atticus White <atticus@robinpowered.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "react-native": "^0.27.0"
-  }
+  "version": "1.0.0"
 }
