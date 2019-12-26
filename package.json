@@ -9,6 +9,6 @@
   "author": "Atticus White <atticus@robinpowered.com>",
   "license": "MIT",
   "devDependencies": {
-    "react-native": "^0.27.0"
+    "react-native": "^0.60.0"
   }
 }
