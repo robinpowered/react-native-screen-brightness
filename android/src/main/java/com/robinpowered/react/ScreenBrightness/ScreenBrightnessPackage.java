@@ -14,10 +14,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class ScreenBrightnessPackage implements ReactPackage {
+  // Make sure that this doesn't clash with another reuqest code used in the app
+  private static final int DEFAULT_WRITE_SETTINGS_REQUEST_CODE = 19999;
+
   private final int mWriteSettingsRequestCode;
 
   public ScreenBrightnessPackage(final int writeSettingsRequestCode) {
     mWriteSettingsRequestCode = writeSettingsRequestCode;
+  }
+
+  public ScreenBrightnessPackage() {
+    this(DEFAULT_WRITE_SETTINGS_REQUEST_CODE);
   }
 
   @Override
